@@ -16,11 +16,18 @@ class TasksController extends Controller
      //getでtasks/にアクセスされた場合の「一覧表示処理」
     public function index()
     {
-        $tasks = Task::all();
         
+         if(\Auth::check()) {
+             $tasks = Task::all();
+             $user = \Auth::user();
+             
+             $tasks = $user->tasks()->paginate(10);
+         
+         }    
         return view("tasks.index",[
             "tasks" => $tasks,
             ]);
+         
     }
 
     /**
@@ -72,10 +79,12 @@ class TasksController extends Controller
     public function show($id)
     {
         $task = Task::findOrFail($id);
-        
+          if(\Auth::id() === $task->user_id){
         return view("tasks.show", [
             "task" =>$task,
             ]);
+          }
+          return redirect("/");
     }
 
     /**
@@ -88,10 +97,13 @@ class TasksController extends Controller
     public function edit($id)
     {
         $task = Task::findOrFail($id);
-        
+        if(\Auth::id() === $task->user_id){
         return view("tasks.edit",[
             "task" => $task,
             ]);
+        }
+        return redirect("/");
+        
     }
 
     /**
@@ -110,7 +122,7 @@ class TasksController extends Controller
             ]);
         
         $task = Task::findOrFail($id);
-        
+    
         $task->user_id = \Auth::user()->id;
         $task->status = $request->status;
         $task->content = $request->content;
