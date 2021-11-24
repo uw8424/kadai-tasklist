@@ -12,7 +12,7 @@
             <ul class="navbar-nav">
                 @if (Auth::check())
                             {{-- ログアウトへのリンク --}}
-                            <li class="dropdown-item">{!! link_to_route('logout.get', 'Logout') !!}</li>
+                            <li class="dropdown-item">{!! link_to_route('logout.get', "log out")!!}</li>
                         </ul>
                     </li>
                 @else
