@@ -16,18 +16,17 @@ class TasksController extends Controller
      //getでtasks/にアクセスされた場合の「一覧表示処理」
     public function index()
     {
+        $tasks = [];
         
          if(\Auth::check()) {
-             $tasks = Task::all();
              $user = \Auth::user();
              
              $tasks = $user->tasks()->paginate(10);
          
-         }    
+         }
         return view("tasks.index",[
-            "tasks" => $tasks,
+            "tasks" =>$tasks,
             ]);
-         
     }
 
     /**
