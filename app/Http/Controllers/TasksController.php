@@ -53,6 +53,7 @@ class TasksController extends Controller
             ]);
         
         $task = new Task;
+        $task->user_id = \Auth::user()->id;
         $task->status = $request->status;
         $task->content = $request->content;
         $task->save();
@@ -102,7 +103,7 @@ class TasksController extends Controller
      */
      //putまたはpatchでtasks/（任意id）/editにアクセスされた場合の「更新処理」
     public function update(Request $request, $id)
-    {
+    {   
         $request->validate([
             "status" => "required|max:10",
             "content" => "required",
@@ -110,6 +111,7 @@ class TasksController extends Controller
         
         $task = Task::findOrFail($id);
         
+        $task->user_id = \Auth::user()->id;
         $task->status = $request->status;
         $task->content = $request->content;
         $task->save();
@@ -127,9 +129,9 @@ class TasksController extends Controller
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
-        
+       if(\Auth::id() === $task->user_id) {
         $task->delete();
-        
+       }
         return redirect("/");
     }
 }
